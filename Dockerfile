@@ -3,7 +3,6 @@ FROM ubuntu:14.04.3
 # Update system packages
 RUN apt-get clean && \
   apt-get update && \
-  update-ca-certificates && \
   apt-get -y upgrade
 
 RUN apt-get update && apt-get install -y \
