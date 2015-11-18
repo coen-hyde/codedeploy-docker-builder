@@ -15,6 +15,15 @@ main() {
   docker login --email="${DOCKER_LOGIN_EMAIL}" --username="${DOCKER_LOGIN_USERNAME}" --password="${DOCKER_LOGIN_PASSWORD}" $DOCKER_REGISTRY
   docker push $DOCKER_IMAGE:$BUILDKITE_TAG
   docker push $DOCKER_IMAGE:latest
+
+  cat <<EOF >./release/config.json
+{
+  "docker": {
+    "repository": "$DOCKER_REGISTRY",
+    "image": "$DOCKER_IMAGE:$BUILDKITE_TAG"
+  }
+}
+EOF
 }
 
 main "$@"
