@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+files:
+  - source: docker-compose.yml
+    destination: /src/usr/codedeployapp/docker-compose.yml
+  - source: env.list
+    destination: /src/usr/codedeployapp/env.list
+hooks:
+  AfterInstall:
+    - location: init.sh
+      timeout: 400
+      runas: root
+    - location: stop.sh
+      timeout: 120
+      runas: root
+  ApplicationStart:
+    - location: start.sh
+      timeout: 120
+      runas: root
