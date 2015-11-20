@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+hooks:
+  BeforeInstall:
+    - location: init.sh
+      timeout: 400
+      runas: root
+  AfterInstall:
+    - location: stop_service.sh
+      timeout: 120
+      runas: root
+  ApplicationStart:
+    - location: start_service.sh
+      timeout: 120
+      runas: root
