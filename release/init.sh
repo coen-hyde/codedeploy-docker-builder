@@ -19,7 +19,7 @@ main() {
   docker pull $docker_image
 
   # Ensure docker is already running
-  service docker start
+  service docker start || true
 }
 
 main "$@"
