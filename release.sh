@@ -10,7 +10,9 @@ main() {
     BUILDKITE_TAG="latest"
   fi
 
-  cp $image_dir/deployment/production.yml $build_dir/release/production.yml
+  cd $image_dir
+
+  cp docker-compose/production.yml $build_dir/release/production.yml
 
   cd $build_dir
 
