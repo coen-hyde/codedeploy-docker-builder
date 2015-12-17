@@ -18,9 +18,6 @@ main() {
   # modify docker-compose production file with the image release
   sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
 
-  # set the awslog stream
-  sed -i -e "s/{{awslogs_stream}}/$(echo "${awslogs_stream}" | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
-
   docker login --email="${docker_login_email}" --username="${docker_login_username}" --password="${docker_login_password}" $docker_registry
   docker pull $docker_image
 
