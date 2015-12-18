@@ -20,9 +20,6 @@ main() {
 
   docker login --email="${docker_login_email}" --username="${docker_login_username}" --password="${docker_login_password}" $docker_registry
   docker pull $docker_image
-
-  # Ensure docker is already running
-  service docker start || true
 }
 
 main "$@"
