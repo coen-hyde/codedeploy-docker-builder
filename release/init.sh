@@ -3,6 +3,10 @@
 set -eo
 
 main() {
+  while [[ ! -f /opt/codedeploy-agent/ready ]]; do
+    sleep 1
+  done
+
   local release_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
   local config="$(cat ${release_dir}/config.json)"
   local docker_image="$(echo $config | jq -r '.docker.image')"
