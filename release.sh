@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eo
+set -eo pipefail
 
 main() {
   local image_dir=/usr/src/image-2-build
