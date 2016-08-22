@@ -16,7 +16,7 @@ main() {
 {
   "docker": {
     "registry": "$DOCKER_REGISTRY",
-    "image": "$DOCKER_IMAGE:$BUILDKITE_BUILD_ID",
+    "image": "$DOCKER_IMAGE:$DOCKER_TAG",
     "login_email": "$DOCKER_LOGIN_EMAIL",
     "login_username": "$DOCKER_LOGIN_USERNAME",
     "login_password": "$DOCKER_LOGIN_PASSWORD"
@@ -28,9 +28,9 @@ EOF
   $(cd release && tar -cf ../release.tar ./)
 
   # Put release on S3
-  echo "Pushing release to s3://$RELEASES_BUCKET/release-${BUILDKITE_BUILD_ID}.tar"
-  echo "aws s3api put-object --bucket=\"$RELEASES_BUCKET\" --key=\"release-${BUILDKITE_BUILD_ID}.tar\" --body release.tar"
-  aws s3api put-object --bucket="$RELEASES_BUCKET" --key="release-${BUILDKITE_BUILD_ID}.tar" --body=release.tar
+  echo "Pushing release to s3://$RELEASES_BUCKET/release-${DOCKER_TAG}.tar"
+  echo "aws s3api put-object --bucket=\"$RELEASES_BUCKET\" --key=\"release-${DOCKER_TAG}.tar\" --body release.tar"
+  aws s3api put-object --bucket="$RELEASES_BUCKET" --key="release-${DOCKER_TAG}.tar" --body=release.tar
 
   # Register revision with code deploy
   local revision=$(cat <<EOF
@@ -38,7 +38,7 @@ EOF
   "revisionType": "S3",
   "s3Location": {
     "bucket": "$RELEASES_BUCKET",
-    "key": "release-${BUILDKITE_BUILD_ID}.tar",
+    "key": "release-${DOCKER_TAG}.tar",
     "bundleType": "tar"
   }
 }
@@ -49,7 +49,7 @@ EOF
     --application-name="$CD_APPLICATION_NAME" \
     --deployment-group-name="$CD_DEPLOYMENT_GROUP_NAME" \
     --deployment-config-name CodeDeployDefault.OneAtATime \
-    --description="release: $BUILDKITE_BUILD_ID" \
+    --description="release: $DOCKER_TAG" \
     --revision="$revision"
 }
 
