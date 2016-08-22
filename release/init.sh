@@ -22,7 +22,11 @@ main() {
   # modify docker-compose production file with the image release
   sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
 
-  docker login --email="${docker_login_email}" --username="${docker_login_username}" --password="${docker_login_password}" $docker_registry
+  # login if we have credentials
+  if [[ $docker_login_email && $docker_login_username && $docker_login_password ]]; then
+    docker login --email="${docker_login_email}" --username="${docker_login_username}" --password="${docker_login_password}" $docker_registry
+  fi
+
   docker pull $docker_image
 
   echo "Pulled new version of application from Docker repo"
