@@ -14,6 +14,7 @@ main() {
 
   cat <<EOF >./release/config.json
 {
+  "env_file_location": "$ENV_FILE_LOCATION",
   "docker": {
     "registry": "$DOCKER_REGISTRY",
     "image": "$DOCKER_IMAGE:$DOCKER_TAG",
@@ -30,7 +31,20 @@ EOF
   # Put release on S3
   echo "Pushing release to s3://$RELEASES_BUCKET/release-${DOCKER_TAG}.tar"
   echo "aws s3api put-object --bucket=\"$RELEASES_BUCKET\" --key=\"release-${DOCKER_TAG}.tar\" --body release.tar"
-  aws s3api put-object --bucket="$RELEASES_BUCKET" --key="release-${DOCKER_TAG}.tar" --body=release.tar
+
+  if [[ $KMS_KEY_ID ]]; then
+    aws s3api put-object \
+      --bucket="$RELEASES_BUCKET" \
+      --key="release-${DOCKER_TAG}.tar" \
+      --server-side-encryption "aws:kms" \
+      --ssekms-key-id "$KMS_KEY_ID" \
+      --body=release.tar
+  else
+    aws s3api put-object \
+      --bucket="$RELEASES_BUCKET" \
+      --key="release-${DOCKER_TAG}.tar" \
+      --body=release.tar
+  fi
 
   # Register revision with code deploy
   local revision=$(cat <<EOF

@@ -9,11 +9,12 @@ main() {
 
   local release_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
   local config="$(cat ${release_dir}/config.json)"
+  local env_file_location="$(echo $config | jq -r '.env_file_location')"
+
   local docker_image="$(echo $config | jq -r '.docker.image')"
   local docker_registry="$(echo $config | jq -r '.docker.registry')"
   local docker_login_email="$(echo $config | jq -r '.docker.login_email')"
   local docker_login_username="$(echo $config | jq -r '.docker.login_username')"
-  local docker_login_password="$(echo $config | jq -r '.docker.login_password')"
   local docker_compose_file="$release_dir/production.yml"
   local ip=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
   local deployment_id="$(cd ${release_dir}/../ && basename $PWD)"
@@ -30,6 +31,10 @@ main() {
   docker pull $docker_image
 
   echo "Pulled new version of application from Docker repo"
+
+  if [[ "$env_file_location" ]]; then
+    aws s3 cp $env_file_location /etc/codedeployapp/env.list
+  fi
 }
 
 main "$@"
