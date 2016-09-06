@@ -59,12 +59,38 @@ EOF
 EOF
 )
 
-  aws deploy create-deployment \
+  local deployment=$(aws deploy create-deployment \
     --application-name="$CD_APPLICATION_NAME" \
     --deployment-group-name="$CD_DEPLOYMENT_GROUP_NAME" \
     --deployment-config-name CodeDeployDefault.OneAtATime \
     --description="release: $DOCKER_TAG" \
-    --revision="$revision"
+    --revision="$revision")
+
+  local deployment_id="$(echo "$deployment" | jq -r '.deploymentId')"
+
+  if [[ ! $deployment_id ]]; then
+    echo "Failed to create deployment" >&2
+    exit 1
+  fi
+
+  echo "Deployment Created"
+
+  while [[ true ]]; do
+    local deployment_info="$(aws deploy get-deployment --deployment-id="${deployment_id}")"
+    local deployment_status="$(echo "${deployment_info}" | jq -r '.deploymentInfo.status')"
+
+    echo "Deployment Status: ${deployment_status}"
+
+    if [[ "$deployment_status" == "Failed" || "$deployment_status" ==  "Stopped" ]]; then
+      exit 1
+    fi
+
+    if [[ "$deployment_status" == "Succeeded" ]]; then
+      break
+    fi
+
+    sleep 1
+  done
 }
 
 main "$@"
