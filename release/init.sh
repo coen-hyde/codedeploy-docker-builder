@@ -2,6 +2,8 @@
 
 set -eo
 
+aws configure set s3.signature_version s3v4
+
 main() {
   while [[ ! -f /opt/codedeploy-agent/ready ]]; do
     sleep 1
