@@ -14,7 +14,7 @@ main() {
 
   cat <<EOF >./release/config.json
 {
-  "env_file_location": "$ENV_FILE_LOCATION",
+  "release_bucket": "$RELEASES_BUCKET",
   "docker": {
     "registry": "$DOCKER_REGISTRY",
     "image": "$DOCKER_IMAGE:$DOCKER_TAG",
