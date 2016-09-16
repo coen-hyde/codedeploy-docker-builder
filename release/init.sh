@@ -26,8 +26,8 @@ main() {
   sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
 
   # If salt is installed replace minion_id var in docker_compose_file
-  if [[ -f /etc/salt/minion_id ]]; then
-    sed -i -e "s/{{minion_id}}/$(cat /etc/salt/minion_id | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
+  if [[ -f /etc/salt/minion ]]; then
+    sed -i -e "s/{{minion_id}}/$(cat /etc/salt/minion | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
   fi
 
   # login if we have credentials
