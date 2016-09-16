@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eo
+set -eo pipefail
 
 aws configure set s3.signature_version s3v4
 
