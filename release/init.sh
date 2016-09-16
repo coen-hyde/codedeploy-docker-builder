@@ -25,6 +25,11 @@ main() {
   # modify docker-compose production file with the image release
   sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
 
+  # If salt is installed replace minion_id var in docker_compose_file
+  if [[ -f /etc/salt/minion_id ]]; then
+    sed -i -e "s/{{minion_id}}/$(cat /etc/salt/minion_id | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
+  fi
+
   # login if we have credentials
   if [[ $docker_login_email && $docker_login_username && $docker_login_password ]]; then
     docker login --email="${docker_login_email}" --username="${docker_login_username}" --password="${docker_login_password}" $docker_registry
