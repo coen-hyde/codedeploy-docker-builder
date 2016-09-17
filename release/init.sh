@@ -26,8 +26,8 @@ main() {
   sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
 
   # If salt is installed replace minion_id var in docker_compose_file
-  if [[ -f /etc/salt/minion ]]; then
-    local minion_id="$(cat /etc/salt/minion)"
+  if [[ $(which salt-call) ]]; then
+    local minion_id="$(salt-call --out=json grains.get id | jq -r '.local')"
     sed -i -e "s/{{minion_id}}/$(echo $minion_id | sed -e 's/[\_\-\/&]/\\&/g')/" $docker_compose_file
   fi
 
