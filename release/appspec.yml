@@ -1,15 +1,24 @@
 version: 0.0
 os: linux
 hooks:
-  BeforeInstall:
-    - location: init.sh
-      timeout: 400
-      runas: root
-  AfterInstall:
+  ApplicationStop:
     - location: stop_service.sh
       timeout: 120
       runas: root
+    - location: deregister_from_elb.sh
+      timeout: 120
+      runas: root
+  AfterInstall:
+    - location: init.sh
+      timeout: 400
+      runas: root
   ApplicationStart:
     - location: start_service.sh
+      timeout: 120
+      runas: root
+    - location: wait_for_service.sh
+      timeout: 120
+      runas: root
+    - location: register_with_elb.sh
       timeout: 120
       runas: root
