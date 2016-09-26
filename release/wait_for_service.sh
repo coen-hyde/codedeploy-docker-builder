@@ -14,8 +14,8 @@ main() {
     printf '.'
 
     attempts=$(( attempts + 1))
-    if [[ attempts -eq 60 ]]; then
-      echo "Tried 60 times to access new version of application. Failing deployment"
+    if [[ attempts -eq 300 ]]; then
+      echo "Tried 300 times to access new version of application. Failing deployment"
       exit 1
     fi
 
