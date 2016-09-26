@@ -3,6 +3,7 @@
 set -eo pipefail
 
 main() {
+  local release_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
   local config="$(cat ${release_dir}/config.json)"
   local port="$(echo $config | jq -r '.port')"
 
