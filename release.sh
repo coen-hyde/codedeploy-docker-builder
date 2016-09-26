@@ -12,7 +12,7 @@ main() {
 
   cd $build_dir
 
-  if [[ $APPLICATION_PORT ]]; then
+  if [[ ! $APPLICATION_PORT ]]; then
     APPLICATION_PORT=3000
   fi
 
