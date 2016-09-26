@@ -6,12 +6,13 @@ main() {
   local release_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
   local config="$(cat ${release_dir}/config.json)"
   local port="$(echo $config | jq -r '.port')"
+  local endpoint="http://127.0.0.1:${port}/healthcheck"
 
   # wait for service to become available
-  echo "Waiting for service to become available"
+  echo "Waiting for service to become available at ${endpoint}"
 
   local attempts=0
-  until $(curl --output /dev/null --silent --head --fail http://127.0.0.1:${port}/healthcheck); do
+  until $(curl --output /dev/null --silent --head --fail ${endpoint}); do
     printf '.'
 
     attempts=$(( attempts + 1))
