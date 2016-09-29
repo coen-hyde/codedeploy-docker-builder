@@ -87,6 +87,10 @@ EOF
     echo "Deployment Status: ${deployment_status}"
 
     if [[ "$deployment_status" == "Failed" || "$deployment_status" ==  "Stopped" ]]; then
+      local errorInformation="$(echo "${deployment_info}" | jq -r '.deploymentInfo.errorInformation')"
+      local errorCode="$(echo "${errorInformation}" | jq -r '.code')"
+      local errorMsg="$(echo "${errorInformation}" | jq -r '.message')"
+      echo "Error Code: ${errorCode}, Error Message: ${errorMsg}"
       exit 1
     fi
 
