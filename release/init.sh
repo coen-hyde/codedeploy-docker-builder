@@ -23,7 +23,8 @@ main() {
   local awslogs_stream="${ip}-${deployment_id}"
 
   # modify docker-compose production file with the image release
-  sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\/&]/\\&/g')/" $docker_compose_file
+  sed -i -e "s/{{release}}/$(echo $docker_image | sed -e 's/[\_\-\/&]/\\&/g')/" $docker_compose_file
+  sed -i -e "s/{{release_bucket}}/$(echo $release_bucket | sed -e 's/[\_\-\/&]/\\&/g')/" $docker_compose_file
 
   # If salt is installed replace minion_id var in docker_compose_file
   if [[ $(which salt-call) ]]; then
