@@ -105,8 +105,6 @@ EOF
 
     sleep 1
   done
-
-  echo "Done"
 }
 
 main "$@"
