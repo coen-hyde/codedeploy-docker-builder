@@ -17,8 +17,8 @@ main() {
     APPLICATION_PORT=3000
   fi
 
-  if [[ ! $CODEDEPLOY_CONFIG_NAME ]]; then
-    CODEDEPLOY_CONFIG_NAME=CodeDeployDefault.OneAtATime
+  if [[ ! $CD_CONFIG_NAME ]]; then
+    CD_CONFIG_NAME="CodeDeployDefault.OneAtATime"
   fi
 
   cat <<EOF >./release/config.json
@@ -72,7 +72,7 @@ EOF
   local deployment=$(aws deploy create-deployment \
     --application-name="${CD_APPLICATION_NAME}" \
     --deployment-group-name="${CD_DEPLOYMENT_GROUP_NAME}" \
-    --deployment-config-name="${CODEDEPLOY_CONFIG_NAME}" \
+    --deployment-config-name="${CD_CONFIG_NAME}" \
     --description="release: ${tag}" \
     --revision="${revision}")
 
