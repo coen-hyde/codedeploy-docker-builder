@@ -41,15 +41,16 @@ main() {
 
   echo "Pulled new version of application from Docker repo"
 
-  # Symlink this release directory to /opt/crowdcontrol
-  if [[ -L /opt/crowdcontrol ]]; then
-    unlink /opt/crowdcontrol
+  # Symlink this release directory to /opt/app-release
+  if [[ -L /opt/codedeploy-release ]]; then
+    unlink /opt/codedeploy-release
   fi
 
-  ln -s $release_dir /opt/crowdcontrol
+  ln -s $release_dir /opt/codedeploy-release
 
   # Copy rails console script to /usr/bin
   cp ${release_dir}/rails-console /usr/bin/rails-console
+  chmod 755 /usr/bin/rails-console
 }
 
 main "$@"

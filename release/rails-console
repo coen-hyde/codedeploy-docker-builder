@@ -2,4 +2,22 @@
 
 set -eo pipefail
 
-docker-compose -f /opt/crowdcontrol/production.yml run rails console
+#Check if run as root
+if [[ "$UID" -ne "0" ]]; then
+  echo "You need sudo!"
+  exit 1
+fi
+
+main() {
+  local config="$(cat /opt/codedeploy-release/config.json)"
+  local release_bucket="$(echo "${config}" | jq -r '.release_bucket')"
+  local docker_image="$(echo "${config}" | jq -r '.docker.image')"
+  local name="railsconsole_$(openssl rand -hex 3)"
+
+  docker run --rm -it \
+    --name ${name} \
+    -e SECRETS_S3_LOCATION=s3://${release_bucket}/config \
+    ${docker_image} rails console
+}
+
+main "$@"
