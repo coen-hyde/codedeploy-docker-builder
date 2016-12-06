@@ -48,9 +48,9 @@ main() {
 
   ln -s $release_dir /opt/codedeploy-release
 
-  # Copy rails console script to /usr/bin
-  cp ${release_dir}/rails-console /usr/bin/rails-console
-  chmod 755 /usr/bin/rails-console
+  # Copy rails console script to /usr/local/bin
+  cp ${release_dir}/rails-console /usr/local/bin/rails-console
+  chmod 755 /usr/local/bin/rails-console
 }
 
 main "$@"
