@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eo pipefail
+
+docker-compose -f /opt/crowdcontrol/production.yml run rails console

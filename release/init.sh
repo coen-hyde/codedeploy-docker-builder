@@ -41,12 +41,15 @@ main() {
 
   echo "Pulled new version of application from Docker repo"
 
-  # If there is an application config on the releases s3 bucket. Download it
-  local app_config_location="s3://${release_bucket}/config"
-
-  if [[ $(aws s3 ls ${app_config_location}) ]]; then
-    aws s3 cp ${app_config_location} /etc/codedeployapp/env.list
+  # Symlink this release directory to /opt/crowdcontrol
+  if [[ -L /opt/crowdcontrol ]]; then
+    unlink /opt/crowdcontrol
   fi
+
+  ln -s $release_dir /opt/crowdcontrol
+
+  # Copy rails console script to /usr/bin
+  cp ${release_dir}/rails-console /usr/bin/rails-console
 }
 
 main "$@"
